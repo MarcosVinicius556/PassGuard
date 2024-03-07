@@ -3,7 +3,7 @@
              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
              xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd">
 
-    <persistence-unit name="hourControll" transaction-type="RESOURCE_LOCAL">
+    <persistence-unit name="passGuard" transaction-type="RESOURCE_LOCAL">
     	<class>br.com.dev.marcos.passguard.entities.User</class>
         <class>br.com.dev.marcos.passguard.entities.Password</class>
 

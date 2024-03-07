@@ -15,13 +15,14 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import br.com.dev.marcos.passguard.entities.interfaces.BaseEntity;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table( name = "tb_password", indexes = @Index( columnList = "id", unique = true ) )
-public class Password implements Serializable {
+public class Password implements BaseEntity, Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -155,6 +156,16 @@ public class Password implements Serializable {
 			return false;
 		Password other = (Password) obj;
 		return Objects.equals(id, other.id);
+	}
+
+	@Override
+	public String getEntityName() {
+		return this.getClass().getName();
+	}
+
+	@Override
+	public Class<? extends BaseEntity> getEntityClass() {
+		return Password.class;
 	}
 
 }
