@@ -65,6 +65,7 @@ public interface BaseRepository<Entity extends BaseEntity> {
 		return entity;
 	}
 	
+	@SuppressWarnings("unchecked")
 	default List<Entity> findAll(Entity entity) {
 		EntityManager em = DatabaseConnection.getDatabaseConnection().createEntityManager();
 		TypedQuery<Entity> queryAll = null;
@@ -86,6 +87,7 @@ public interface BaseRepository<Entity extends BaseEntity> {
 		return entities;
 	}
 	
+	@SuppressWarnings("unchecked")
 	default Entity findById(Entity entity) {
 		EntityManager em = DatabaseConnection.getDatabaseConnection().createEntityManager();
 		try {
