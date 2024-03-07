@@ -1,5 +1,132 @@
 package br.com.dev.marcos.passguard.resources;
 
+import java.net.URI;
+import java.util.List;
+
+import br.com.dev.marcos.passguard.entities.Password;
+import br.com.dev.marcos.passguard.services.factory.ServiceFactory;
+import br.com.dev.marcos.passguard.services.interfaces.PasswordService;
+import jakarta.validation.Valid;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.DELETE;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.PUT;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.ResponseBuilder;
+import jakarta.ws.rs.core.Response.Status;
+import jakarta.ws.rs.core.UriBuilder;
+
+@Path("/passwords")
 public class PasswordResource {
 
+	private PasswordService service;
+	
+	private PasswordService getService() {
+		if(service == null)
+			service = ServiceFactory.createPassordService();
+		
+		return service;
+	}
+	
+	@GET
+	@Path("/")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response findAll() {
+		ResponseBuilder response = null;
+		List<Password> passwords = getService().findAll(new Password());
+		if(passwords != null && passwords.size() > 0) {
+			response = Response.ok();
+			response.entity(passwords);
+		} else {
+			response = Response.noContent();
+			response.status(Status.NOT_FOUND);
+		}
+		return response.build();
+	}
+	
+	@GET
+	@Path("/{id}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response findById(@PathParam("id") Long id) {
+		ResponseBuilder response = null;
+		Password password = getService().findById(new Password.Builder().setId(id).build());
+		if(password != null) {
+			response = Response.ok();
+			response.entity(password);
+		} else {
+			response = Response.noContent();
+			response.status(Status.NOT_FOUND);
+		}
+		return response.build();
+	}
+	
+	@POST
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response create(@Valid Password password) {
+		ResponseBuilder response = null;
+		password = getService().save(password);
+		if(password != null) {
+			final URI passwordURI = UriBuilder.fromResource(PasswordResource.class).path("/passwords/{id}").build(password.getId());
+			response = Response.created(passwordURI);
+			response.entity(password);
+		} else {
+			response = Response.noContent();
+			response.status(Status.INTERNAL_SERVER_ERROR);
+		}
+		return response.build();
+	}
+	
+	@DELETE
+	@Path("/{id}")
+	public Response delete(@PathParam("id") Long id) {
+		ResponseBuilder response = null;
+		Password passwordToDelete = getService().findById(new Password.Builder().setId(id).build());
+		if(passwordToDelete != null) {
+			try {
+				getService().delete(passwordToDelete);
+				response = Response.noContent();
+			} catch (Exception e) {
+				e.printStackTrace();
+				response = Response.noContent();
+				response.status(Status.INTERNAL_SERVER_ERROR);
+			}
+		} else {
+			response = Response.noContent();
+			response.status(Status.NOT_FOUND);
+		}
+		
+		return response.build();
+	}
+	
+	@PUT
+	@Path("/{id}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response update(@PathParam("id") Long id, @Valid Password newPassword) {
+		ResponseBuilder response = null;
+		Password oldPass = getService().findById(new Password.Builder().setId(id).build());
+		if(oldPass != null) {
+			try {
+				newPassword.setId(oldPass.getId());
+				getService().update(newPassword);
+				response = Response.noContent();
+			} catch (Exception e) {
+				e.printStackTrace();
+				response = Response.noContent();
+				response.status(Status.INTERNAL_SERVER_ERROR);
+			}
+		} else {
+			response = Response.noContent();
+			response.status(Status.NOT_FOUND);
+		}
+		
+		return response.build();
+	}
+	
 }
