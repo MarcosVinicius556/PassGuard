@@ -1,7 +1,9 @@
 package br.com.dev.marcos.passguard.resources;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
+import br.com.dev.marcos.passguard.dto.UserDTO;
 import br.com.dev.marcos.passguard.entities.User;
 import br.com.dev.marcos.passguard.services.factory.ServiceFactory;
 import br.com.dev.marcos.passguard.services.interfaces.UserService;
@@ -37,7 +39,7 @@ private UserService service;
 		try {
 			List<User> users = getService().findAll(new User());
 			response = Response.ok();
-			response.entity(users);
+			response.entity(users.stream().map(user -> new UserDTO(user)).collect(Collectors.toList()));
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e; //Joga a exceção para ser tratado pelos exceptions Handlers....
@@ -54,7 +56,7 @@ private UserService service;
 		try {
 			User user = getService().findById(new User.Builder().setId(id).build());
 			response = Response.ok();
-			response.entity(user);
+			response.entity(new UserDTO(user));
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e; //Joga a exceção para ser tratado pelos exceptions Handlers....
@@ -98,7 +100,7 @@ private UserService service;
 	@Path("/{id}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response update(@PathParam("id") Long id, @Valid User newUser) {
+	public Response update(@PathParam("id") Long id, User newUser) {
 		ResponseBuilder response = null;
 		try {
 			newUser.setId(id);

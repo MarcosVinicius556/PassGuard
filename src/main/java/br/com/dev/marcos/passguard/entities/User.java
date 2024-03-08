@@ -24,7 +24,7 @@ import jakarta.validation.constraints.NotBlank;
 
 @Entity
 @Table( name = "tb_user", indexes = @Index( columnList = "id", unique = true ) )
-public class User implements BaseEntity ,Serializable {
+public class User implements BaseEntity, Serializable {
 
 	private static final long serialVersionUID = 1L;
 

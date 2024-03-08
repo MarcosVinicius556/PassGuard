@@ -37,7 +37,7 @@ public interface BaseRepository<Entity extends BaseEntity> {
 		EntityManager em = DatabaseConnection.getDatabaseConnection().createEntityManager();
 		try {
 			em.getTransaction().begin();
-			em.remove(entity);
+			em.remove(em.contains(entity) ? entity : em.merge(entity));
 			em.getTransaction().commit();
 			System.err.println("Entidade removida com sucesso do banco.");
 		} catch (Exception e) {
