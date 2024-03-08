@@ -1,6 +1,5 @@
 package br.com.dev.marcos.passguard.resources;
 
-import java.net.URI;
 import java.util.List;
 
 import br.com.dev.marcos.passguard.entities.User;
@@ -18,8 +17,6 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.ResponseBuilder;
-import jakarta.ws.rs.core.Response.Status;
-import jakarta.ws.rs.core.UriBuilder;
 
 @Path("/users")
 public class UserResource {
@@ -34,18 +31,18 @@ private UserService service;
 	}
 	
 	@GET
-	@Path("/")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response findAll() {
 		ResponseBuilder response = null;
-		List<User> users = getService().findAll(new User());
-		if(users != null && users.size() > 0) {
+		try {
+			List<User> users = getService().findAll(new User());
 			response = Response.ok();
 			response.entity(users);
-		} else {
-			response = Response.noContent();
-			response.status(Status.NOT_FOUND);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e; //Joga a exceção para ser tratado pelos exceptions Handlers....
 		}
+		
 		return response.build();
 	}
 	
@@ -54,31 +51,31 @@ private UserService service;
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response findById(@PathParam("id") Long id) {
 		ResponseBuilder response = null;
-		User user = getService().findById(new User.Builder().setId(id).build());
-		if(user != null) {
+		try {
+			User user = getService().findById(new User.Builder().setId(id).build());
 			response = Response.ok();
 			response.entity(user);
-		} else {
-			response = Response.noContent();
-			response.status(Status.NOT_FOUND);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e; //Joga a exceção para ser tratado pelos exceptions Handlers....
 		}
+		
 		return response.build();
 	}
 	
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response create(@Valid User user) {
+	public Response create(User user) {
 		ResponseBuilder response = null;
-		user = getService().save(user);
-		if(user != null) {
-			final URI userURI = UriBuilder.fromResource(UserResource.class).path("/users/{id}").build(user.getId());
-			response = Response.created(userURI);
-			response.entity(user);
-		} else {
-			response = Response.noContent();
-			response.status(Status.INTERNAL_SERVER_ERROR);
+		try {
+			user = getService().save(user);
+			response = Response.ok();
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e; //Joga a exceção para ser tratado pelos exceptions Handlers....
 		}
+		
 		return response.build();
 	}
 	
@@ -86,19 +83,12 @@ private UserService service;
 	@Path("/{id}")
 	public Response delete(@PathParam("id") Long id) {
 		ResponseBuilder response = null;
-		User userToDelete = getService().findById(new User.Builder().setId(id).build());
-		if(userToDelete != null) {
-			try {
-				getService().delete(userToDelete);
-				response = Response.noContent();
-			} catch (Exception e) {
-				e.printStackTrace();
-				response = Response.noContent();
-				response.status(Status.INTERNAL_SERVER_ERROR);
-			}
-		} else {
-			response = Response.noContent();
-			response.status(Status.NOT_FOUND);
+		try {
+			getService().delete(new User.Builder().setId(id).build());
+			response = Response.ok();
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e; //Joga a exceção para ser tratado pelos exceptions Handlers....
 		}
 		
 		return response.build();
@@ -110,20 +100,13 @@ private UserService service;
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response update(@PathParam("id") Long id, @Valid User newUser) {
 		ResponseBuilder response = null;
-		User oldUser = getService().findById(new User.Builder().setId(id).build());
-		if(oldUser != null) {
-			try {
-				newUser.setId(oldUser.getId());
-				getService().update(newUser);
-				response = Response.noContent();
-			} catch (Exception e) {
-				e.printStackTrace();
-				response = Response.noContent();
-				response.status(Status.INTERNAL_SERVER_ERROR);
-			}
-		} else {
-			response = Response.noContent();
-			response.status(Status.NOT_FOUND);
+		try {
+			newUser.setId(id);
+			getService().update(newUser);
+			response = Response.ok();
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e; //Joga a exceção para ser tratado pelos exceptions Handlers....
 		}
 		
 		return response.build();

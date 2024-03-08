@@ -8,7 +8,7 @@ import jakarta.ws.rs.core.MediaType;
 /**
  * Root resource (exposed at "myresource" path)
  */
-@Path("/")
+@Path("/indexResource")
 public class MyResource {
 
     /**

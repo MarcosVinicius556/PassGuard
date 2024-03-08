@@ -74,7 +74,13 @@
 		    <groupId>com.h2database</groupId>
 		    <artifactId>h2</artifactId>
 		    <version>2.2.224</version>
-		    <scope>test</scope>
+		</dependency>
+		
+		<!-- JAXB -->
+		<dependency>
+		    <groupId>javax.xml.bind</groupId>
+		    <artifactId>jaxb-api</artifactId>
+		    <version>2.3.1</version>
 		</dependency>
 	</dependencies>
 	<properties>

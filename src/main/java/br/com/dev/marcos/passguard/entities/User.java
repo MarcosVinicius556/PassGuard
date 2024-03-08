@@ -48,7 +48,7 @@ public class User implements BaseEntity ,Serializable {
 	@NotBlank( message = "A senha não pode ser vazia." )
 	@Min( value = 6, message = "A senha deve conter no mínimo 6 caracteres" )
 	@Max( value = 32, message = "A senha não pode ultrapassar 32 caractéres" )
-	private String passsword;
+	private String password;
 	
 	@Column( name = "createdat", columnDefinition = "TIMESTAMP", nullable = false )
 	private LocalDateTime createdAt;
@@ -60,7 +60,7 @@ public class User implements BaseEntity ,Serializable {
 		private Long id;
 		private String username;
 		private String nickName;
-		private String passsword;
+		private String password;
 		private LocalDateTime createdAt;
 		private List<Password> savedPasswords;
 		
@@ -79,8 +79,8 @@ public class User implements BaseEntity ,Serializable {
 			return this;
 		}
 		
-		public Builder setPasssword(String passsword) {
-			this.passsword = passsword;
+		public Builder setPassword(String password) {
+			this.password = password;
 			return this;
 		}
 		
@@ -108,7 +108,7 @@ public class User implements BaseEntity ,Serializable {
 		this.id = builder.id;
 		this.username = builder.username;
 		this.nickName = builder.nickName;
-		this.passsword = builder.passsword;
+		this.password = builder.password;
 		this.createdAt = builder.createdAt;
 		this.savedPasswords = builder.savedPasswords;
 	}
@@ -137,12 +137,12 @@ public class User implements BaseEntity ,Serializable {
 		this.nickName = nickName;
 	}
 
-	public String getPasssword() {
-		return passsword;
+	public String getPassword() {
+		return password;
 	}
 
-	public void setPasssword(String passsword) {
-		this.passsword = passsword;
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 	public LocalDateTime getCreatedAt() {

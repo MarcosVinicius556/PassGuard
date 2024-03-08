@@ -7,6 +7,7 @@ import javax.persistence.TypedQuery;
 
 import br.com.dev.marcos.passguard.entities.interfaces.BaseEntity;
 import br.com.dev.marcos.passguard.repositories.connection.DatabaseConnection;
+import br.com.dev.marcos.passguard.services.exception.DatabaseException;
 
 /**
  * @author Marcos Vinicius Angeli Costa
@@ -24,7 +25,7 @@ public interface BaseRepository<Entity extends BaseEntity> {
 			System.err.println("Entidade salva com sucesso no banco.");
 		} catch (Exception e) {
 			em.getTransaction().rollback();
-			System.err.println("Não foi possível salvar a entidade no banco.");
+			throw new DatabaseException("Não foi possível inserir o registro de "+entity.getEntityName()+" no banco. Motivo: " + e.getMessage());
 		} finally {
 			em.clear();
 			em.close();
@@ -41,7 +42,7 @@ public interface BaseRepository<Entity extends BaseEntity> {
 			System.err.println("Entidade removida com sucesso do banco.");
 		} catch (Exception e) {
 			em.getTransaction().rollback();
-			System.err.println("Não foi possível remover a entidade do banco.");
+			throw new DatabaseException("Não foi possível remover o registro de "+entity.getEntityName()+" do banco. Motivo: " + e.getMessage());
 		} finally {
 			em.clear();
 			em.close();
@@ -57,7 +58,7 @@ public interface BaseRepository<Entity extends BaseEntity> {
 			System.err.println("Entidade atualizada com sucesso no banco.");
 		} catch (Exception e) {
 			em.getTransaction().rollback();
-			System.err.println("Não foi possível atualizar a entidade no banco.");
+			throw new DatabaseException("Não foi possível atualizar o registro de "+entity.getEntityName()+" do banco. Motivo: " + e.getMessage());
 		} finally {
 			em.clear();
 			em.close();
@@ -76,10 +77,10 @@ public interface BaseRepository<Entity extends BaseEntity> {
 			em.getTransaction().begin();
 			entities = queryAll.getResultList();
 			em.getTransaction().commit();
-			System.err.println("Entidade salva com sucesso no banco.");
+			System.err.println("Entidades no banco encontradas com sucesso no banco.");
 		} catch (Exception e) {
 			em.getTransaction().rollback();
-			System.err.println("Não foi possível salvar a entidade no banco.");
+			throw new DatabaseException("Não foi possível buscar os registros de "+entity.getEntityName()+" do banco. Motivo: " + e.getMessage());
 		} finally {
 			em.clear();
 			em.close();
@@ -90,19 +91,21 @@ public interface BaseRepository<Entity extends BaseEntity> {
 	@SuppressWarnings("unchecked")
 	default Entity findById(Entity entity) {
 		EntityManager em = DatabaseConnection.getDatabaseConnection().createEntityManager();
+		Entity newEntity = null;
 		try {
 			em.getTransaction().begin();
-			entity = (Entity) em.find(entity.getEntityClass(), entity);
+			newEntity = (Entity) em.find(entity.getEntityClass(), entity.getId());
 			em.getTransaction().commit();
-			System.err.println("Entidade salva com sucesso no banco.");
+			System.err.println("Entidade encontrada com sucesso no banco.");
 		} catch (Exception e) {
 			em.getTransaction().rollback();
-			System.err.println("Não foi possível salvar a entidade no banco.");
+			throw new DatabaseException("Não foi possível buscar o registro de "+entity.getEntityName()+" do banco. Motivo: " + e.getMessage());
 		} finally {
 			em.clear();
 			em.close();
 		}
-		return entity;
+		
+		return newEntity;
 	}
 	
 }

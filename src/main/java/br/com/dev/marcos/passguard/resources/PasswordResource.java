@@ -1,6 +1,5 @@
 package br.com.dev.marcos.passguard.resources;
 
-import java.net.URI;
 import java.util.List;
 
 import br.com.dev.marcos.passguard.entities.Password;
@@ -18,8 +17,6 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.ResponseBuilder;
-import jakarta.ws.rs.core.Response.Status;
-import jakarta.ws.rs.core.UriBuilder;
 
 @Path("/passwords")
 public class PasswordResource {
@@ -34,17 +31,16 @@ public class PasswordResource {
 	}
 	
 	@GET
-	@Path("/")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response findAll() {
 		ResponseBuilder response = null;
-		List<Password> passwords = getService().findAll(new Password());
-		if(passwords != null && passwords.size() > 0) {
+		try {
+			List<Password> passwords = getService().findAll(new Password());
 			response = Response.ok();
 			response.entity(passwords);
-		} else {
-			response = Response.noContent();
-			response.status(Status.NOT_FOUND);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e; //Joga a exceção para ser tratado pelos exceptions Handlers....
 		}
 		return response.build();
 	}
@@ -54,13 +50,13 @@ public class PasswordResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response findById(@PathParam("id") Long id) {
 		ResponseBuilder response = null;
-		Password password = getService().findById(new Password.Builder().setId(id).build());
-		if(password != null) {
+		try {
+			Password password = getService().findById(new Password.Builder().setId(id).build());
 			response = Response.ok();
 			response.entity(password);
-		} else {
-			response = Response.noContent();
-			response.status(Status.NOT_FOUND);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e; //Joga a exceção para ser tratado pelos exceptions Handlers....
 		}
 		return response.build();
 	}
@@ -70,14 +66,12 @@ public class PasswordResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response create(@Valid Password password) {
 		ResponseBuilder response = null;
-		password = getService().save(password);
-		if(password != null) {
-			final URI passwordURI = UriBuilder.fromResource(PasswordResource.class).path("/passwords/{id}").build(password.getId());
-			response = Response.created(passwordURI);
-			response.entity(password);
-		} else {
-			response = Response.noContent();
-			response.status(Status.INTERNAL_SERVER_ERROR);
+		try {
+			password = getService().save(password);
+			response = Response.ok();
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e; //Joga a exceção para ser tratado pelos exceptions Handlers....
 		}
 		return response.build();
 	}
@@ -86,19 +80,12 @@ public class PasswordResource {
 	@Path("/{id}")
 	public Response delete(@PathParam("id") Long id) {
 		ResponseBuilder response = null;
-		Password passwordToDelete = getService().findById(new Password.Builder().setId(id).build());
-		if(passwordToDelete != null) {
-			try {
-				getService().delete(passwordToDelete);
-				response = Response.noContent();
-			} catch (Exception e) {
-				e.printStackTrace();
-				response = Response.noContent();
-				response.status(Status.INTERNAL_SERVER_ERROR);
-			}
-		} else {
-			response = Response.noContent();
-			response.status(Status.NOT_FOUND);
+		try {
+			getService().delete(new Password.Builder().setId(id).build());
+			response = Response.ok();
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e; //Joga a exceção para ser tratado pelos exceptions Handlers....
 		}
 		
 		return response.build();
@@ -110,20 +97,13 @@ public class PasswordResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response update(@PathParam("id") Long id, @Valid Password newPassword) {
 		ResponseBuilder response = null;
-		Password oldPass = getService().findById(new Password.Builder().setId(id).build());
-		if(oldPass != null) {
-			try {
-				newPassword.setId(oldPass.getId());
-				getService().update(newPassword);
-				response = Response.noContent();
-			} catch (Exception e) {
-				e.printStackTrace();
-				response = Response.noContent();
-				response.status(Status.INTERNAL_SERVER_ERROR);
-			}
-		} else {
-			response = Response.noContent();
-			response.status(Status.NOT_FOUND);
+		try {
+			newPassword.setId(id);
+			getService().update(newPassword);
+			response = Response.ok();
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e; //Joga a exceção para ser tratado pelos exceptions Handlers....
 		}
 		
 		return response.build();
