@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de usuários</title>
+</head>
+<body>
+    <div ng-controller="UserController">
+        <button ng-click="findAll()">Buscar usuários cadastrados</button>
+        <h2>Lista de Usuários:</h2>
+        <ul>
+            <li ng-repeat="user in users">
+                {{ user.username }} - {{ user.nickname }}
+            </li>
+        </ul>
+    </div>
+</body>
+</html>

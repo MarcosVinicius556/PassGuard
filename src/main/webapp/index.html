@@ -1,0 +1,46 @@
+<html ng-app="app">
+	<head>
+		<title>Pass Guard</title>
+		<link rel="stylesheet" href="./assets/css/bootstrap,.min.css" />
+	</head>
+	<body>
+		<div ng-view></div>
+		   <!-- Modal -->
+		<div id="modal-validacao" class="modal fade" role="dialog">
+		   <div class="modal-dialog">
+   
+			 <!-- Modal content-->
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close"
+						data-dismiss="modal">×</button>
+						<h4 class="modal-title">Alerta!</h4>
+					</div>
+					<div class="modal-body">
+						<p>{{txtModal}}</p>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default"
+						data-dismiss="modal">Fechar</button>
+					</div>
+			 	</div>
+		  	 </div>
+			</div>
+		</div>
+
+		<!-- Angular dependencies -->
+		<script src="./assets/js/angular.min.js"></script>
+		<script src="./assets/js/angular-route.min.js"></script>
+
+		<!-- JQuery dependencies -->
+		<script src="./assets/js/jquery-3.7.1.min.js"></script>
+
+		<!-- Bootstrap dependencies -->
+		<script src="./assets/js/bootstrap.bundle.min.js"></script>
+
+		<!-- System dependencies -->
+		<script src="./app/app.module.js"></script>
+		<script src="./app/controllers/MainController.js"></script>
+		<script src="./app/controllers/UserController.js"></script>
+	</body>
+</html>
