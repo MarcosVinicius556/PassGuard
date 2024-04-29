@@ -14,9 +14,13 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table( name = "tb_password", indexes = @Index( columnList = "id", unique = true ) )
+@Getter
+@Setter
 public class Password implements Serializable {
     
     private static final long serialVersionUID = 1L;
@@ -31,6 +35,9 @@ public class Password implements Serializable {
 	
 	@Column( name = "description", length = 128, nullable = true )
 	private String description;
+
+    @Column( name = "username", length = 128, nullable = false )
+    private String username;
 	
 	@Column( name = "password", length = 32, nullable = false )
 	private String password;
@@ -90,46 +97,6 @@ public class Password implements Serializable {
 		this.user = builder.user;
 	}
 
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	public User getUser() {
-		return user;
-	}
-
-	public void setUser(User user) {
-		this.user = user;
-	}
-
 	@Override
 	public int hashCode() {
 		return Objects.hash(id);
@@ -146,5 +113,5 @@ public class Password implements Serializable {
 		Password other = (Password) obj;
 		return Objects.equals(id, other.id);
 	}
-    
+
 }
