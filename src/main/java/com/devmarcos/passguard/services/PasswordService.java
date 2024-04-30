@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.devmarcos.passguard.dtos.PasswordCreateDTO;
 import com.devmarcos.passguard.entities.Password;
@@ -11,6 +12,7 @@ import com.devmarcos.passguard.entities.User;
 import com.devmarcos.passguard.repositories.PasswordRepository;
 import com.devmarcos.passguard.repositories.UserRepository;
 
+@Service
 public class PasswordService {
 
     @Autowired

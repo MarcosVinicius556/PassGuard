@@ -4,11 +4,13 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.devmarcos.passguard.dtos.UserCreateDTO;
 import com.devmarcos.passguard.entities.User;
 import com.devmarcos.passguard.repositories.UserRepository;
 
+@Service
 public class UserService {
     
     @Autowired
