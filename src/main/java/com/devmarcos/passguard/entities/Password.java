@@ -50,6 +50,7 @@ public class Password implements Serializable {
 		
 		private Long id;
 		private String name;
+		private String username;
 		private String description;
 		private String password;
 		private User user;
@@ -61,6 +62,11 @@ public class Password implements Serializable {
 		
 		public Builder setName(String name) {
 			this.name = name;
+			return this;
+		}
+
+		public Builder setUsername(String username) {
+			this.username = username;
 			return this;
 		}
 		
@@ -92,6 +98,7 @@ public class Password implements Serializable {
 	public Password(Builder builder) {
 		this.id = builder.id;
 		this.name = builder.name;
+		this.username = builder.username;
 		this.description = builder.description;
 		this.password = builder.password;
 		this.user = builder.user;
