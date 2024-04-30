@@ -1,5 +1,6 @@
 package com.devmarcos.passguard.services;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,47 @@ public class UserService {
     public User findById(Long id) {
         Optional<User> opUser = repository.findById(id);
         return opUser.orElseThrow(() -> new RuntimeException()); //ExceptionHandler que tratará isto (Criar uma exceção personalizada)
+    }
+
+    public List<User> findAll() {
+        List<User> users = repository.findAll();
+        if(users == null || users.isEmpty())
+            throw new RuntimeException(); //TODO substituir por uma exceção personalizada
+        return users;
+    }
+
+    public User update(Long oldUserId, User newUser) {
+        try {
+            
+            User oldUser = repository.getReferenceById(oldUserId);
+            if(oldUser == null)
+                throw new RuntimeException();
+            updateData(oldUser, newUser);
+            return repository.save(oldUser);
+        } catch (Exception e) {
+            // TODO: Criar exceptionHandler
+            e.printStackTrace();
+            throw new RuntimeException();
+        }
+    }
+
+    public void updateData(User oldUser, User newUser) {
+        oldUser.setUsername(newUser.getUsername()); 
+        oldUser.setPassword(newUser.getPassword());
+        oldUser.setNickName(newUser.getNickName());
+    }
+
+    public void delete(Long id) {        
+        try {
+            User userToRemove = repository.getReferenceById(id);
+            if(userToRemove == null)
+                throw new RuntimeException();
+
+            repository.delete(userToRemove);
+        } catch (Exception e) {
+            // TODO: Criar exceção personalizada
+            e.printStackTrace();
+        }
     }
 
 }
