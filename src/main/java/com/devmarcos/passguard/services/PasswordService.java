@@ -11,6 +11,8 @@ import com.devmarcos.passguard.entities.Password;
 import com.devmarcos.passguard.entities.User;
 import com.devmarcos.passguard.repositories.PasswordRepository;
 import com.devmarcos.passguard.repositories.UserRepository;
+import com.devmarcos.passguard.services.exceptions.DatabaseException;
+import com.devmarcos.passguard.services.exceptions.ResourceNotFoundException;
 
 @Service
 public class PasswordService {
@@ -34,21 +36,19 @@ public class PasswordService {
 
             repository.save(pass);
         } catch (Exception e) {
-            // TODO: Criar exceções personalizadas com algum ExceptionHandler
-            e.printStackTrace();
-            throw new RuntimeException();
+            throw new DatabaseException("Oops, ocorreu um erro ao inserir o registro. Detalhes: " + e.getMessage());
         }
     }
 
     public Password findById(Long id) {
         Optional<Password> opPass = repository.findById(id);
-        return opPass.orElseThrow(() -> new RuntimeException()); //ExceptionHandler que tratará isto (Criar uma exceção personalizada)
+        return opPass.orElseThrow(() -> new ResourceNotFoundException(id));
     }
 
     public List<Password> findAll() {
         List<Password> passwords = repository.findAll();
         if(passwords == null || passwords.isEmpty())
-            throw new RuntimeException(); //TODO substituir por uma exceção personalizada
+            throw new ResourceNotFoundException("TODOS");
         return passwords;
     }
 
@@ -57,13 +57,11 @@ public class PasswordService {
             
             Password oldPass = repository.getReferenceById(oldPassId);
             if(oldPass == null)
-                throw new RuntimeException();
+                throw new ResourceNotFoundException(oldPassId);
             updateData(oldPass, newPass);
             return repository.save(oldPass);
         } catch (Exception e) {
-            // TODO: Criar exceptionHandler
-            e.printStackTrace();
-            throw new RuntimeException();
+            throw new DatabaseException("Oops, ocorreu um erro ao atualizar o registro. Detalhes: " + e.getMessage());
         }
     }
 
@@ -78,12 +76,11 @@ public class PasswordService {
         try {
             Password passToRemove = repository.getReferenceById(id);
             if(passToRemove == null)
-                throw new RuntimeException();
+                throw new ResourceNotFoundException(id);
 
             repository.delete(passToRemove);
         } catch (Exception e) {
-            // TODO: Criar exceção personalizada
-            e.printStackTrace();
+            throw new DatabaseException("Oops, ocorreu um erro ao remover o registro. Detalhes: " + e.getMessage());
         }
     }
 

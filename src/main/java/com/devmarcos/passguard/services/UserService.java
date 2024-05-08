@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import com.devmarcos.passguard.dtos.UserCreateDTO;
 import com.devmarcos.passguard.entities.User;
 import com.devmarcos.passguard.repositories.UserRepository;
+import com.devmarcos.passguard.services.exceptions.DatabaseException;
+import com.devmarcos.passguard.services.exceptions.ResourceNotFoundException;
 
 @Service
 public class UserService {
@@ -27,20 +29,19 @@ public class UserService {
 
             repository.save(user);
         } catch (Exception e) {
-            // TODO: Criar exceções personalizadas com algum ExceptionHandler
-            e.printStackTrace();
+            throw new DatabaseException("Oops, ocorreu um erro ao inserir o registro. Detalhes: " + e.getMessage());
         }
     }
 
     public User findById(Long id) {
         Optional<User> opUser = repository.findById(id);
-        return opUser.orElseThrow(() -> new RuntimeException()); //ExceptionHandler que tratará isto (Criar uma exceção personalizada)
+        return opUser.orElseThrow(() -> new ResourceNotFoundException(id));
     }
 
     public List<User> findAll() {
         List<User> users = repository.findAll();
         if(users == null || users.isEmpty())
-            throw new RuntimeException(); //TODO substituir por uma exceção personalizada
+            throw new ResourceNotFoundException("TODOS");
         return users;
     }
 
@@ -49,13 +50,11 @@ public class UserService {
             
             User oldUser = repository.getReferenceById(oldUserId);
             if(oldUser == null)
-                throw new RuntimeException();
+                throw new ResourceNotFoundException(oldUserId);
             updateData(oldUser, newUser);
             return repository.save(oldUser);
         } catch (Exception e) {
-            // TODO: Criar exceptionHandler
-            e.printStackTrace();
-            throw new RuntimeException();
+            throw new DatabaseException("Oops, ocorreu um erro ao atualizar o registro. Detalhes: " + e.getMessage());
         }
     }
 
@@ -69,12 +68,11 @@ public class UserService {
         try {
             User userToRemove = repository.getReferenceById(id);
             if(userToRemove == null)
-                throw new RuntimeException();
+                throw new ResourceNotFoundException(id);
 
             repository.delete(userToRemove);
         } catch (Exception e) {
-            // TODO: Criar exceção personalizada
-            e.printStackTrace();
+            throw new DatabaseException("Oops, ocorreu um erro ao remover o registro. Detalhes: " + e.getMessage());
         }
     }
 
