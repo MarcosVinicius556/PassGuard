@@ -1,0 +1,5 @@
+spring:
+    application:
+        name: passguard
+    profiles:
+        active: dev

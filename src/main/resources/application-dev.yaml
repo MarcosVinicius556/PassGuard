@@ -1,0 +1,14 @@
+spring:
+    datasource:
+        url: jdbc:h2:mem:testdb
+        username: sa
+        password: 
+    jpa:
+        properties:
+            hibernate:
+                jdbc:
+                    lob:
+                        non_contextual_creation: true
+                ddl-auto: update
+                format_sql: true
+        show-sql: true

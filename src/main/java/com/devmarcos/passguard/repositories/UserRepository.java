@@ -6,4 +6,6 @@ import com.devmarcos.passguard.entities.User;
 
 public interface UserRepository extends JpaRepository<User, Long> {
     
+    public User findByUsername(String username);
+
 }
