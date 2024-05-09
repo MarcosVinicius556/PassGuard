@@ -3,3 +3,7 @@ spring:
         name: passguard
     profiles:
         active: dev
+
+springdoc:
+    api-docs:
+        path: /docs

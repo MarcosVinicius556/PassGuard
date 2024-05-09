@@ -38,7 +38,9 @@ public class SecurityConfiguration {
                    .csrf(csrf -> csrf.disable())
                    .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                    .authorizeHttpRequests(request -> {
-                        request.requestMatchers(HttpMethod.POST, "/login").permitAll();
+                       request.requestMatchers(HttpMethod.POST, "/auth/login").permitAll();
+                       request.requestMatchers(HttpMethod.GET, "/swagger-ui/**").permitAll();
+                       request.requestMatchers(HttpMethod.GET, "/docs/**").permitAll();
                         request.anyRequest().authenticated();
                    })
                    .addFilterBefore(tokenFilter, UsernamePasswordAuthenticationFilter.class)

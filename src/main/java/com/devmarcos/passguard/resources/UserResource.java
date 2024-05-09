@@ -16,9 +16,12 @@ import com.devmarcos.passguard.dtos.UserCreateDTO;
 import com.devmarcos.passguard.entities.User;
 import com.devmarcos.passguard.services.UserService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 
 @RestController
 @RequestMapping( value = "/users" )
+@Tag( name = "CRUD - Usuário" )
 public class UserResource {
     
     @Autowired
