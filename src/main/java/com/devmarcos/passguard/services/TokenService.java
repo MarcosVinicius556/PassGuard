@@ -1,5 +1,6 @@
 package com.devmarcos.passguard.services;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
@@ -34,12 +35,12 @@ public class TokenService {
     }
 
     public String getExpiresAt(String token) {
-        return JWT.require(Algorithm.HMAC256(SECRET_WORD))
-                  .withIssuer(ISSUER)
-                  .build()
-                  .verify(token)
-                  .getExpiresAt()
-                  .toString();
+        return new SimpleDateFormat("dd/MM/yyyy HH:mm:ss")
+                  .format(JWT.require(Algorithm.HMAC256(SECRET_WORD))
+                             .withIssuer(ISSUER)
+                             .build()
+                             .verify(token)
+                             .getExpiresAt());
     }
 
 

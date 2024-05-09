@@ -46,7 +46,7 @@ public class User implements UserDetails {
     @Setter
 	private String nickName;
 	
-	@Column( name = "password", length = 32, nullable = false )
+	@Column( name = "password", length = 512, nullable = false )
     @Getter
     @Setter
 	private String password;

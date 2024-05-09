@@ -13,7 +13,7 @@ import com.devmarcos.passguard.repositories.PasswordRepository;
 import com.devmarcos.passguard.repositories.UserRepository;
 
 @Configuration
-@Profile("test")
+@Profile("dev")
 public class InitialTestSeeding implements CommandLineRunner {
 
     @Autowired

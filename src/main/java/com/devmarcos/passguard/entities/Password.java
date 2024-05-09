@@ -39,7 +39,7 @@ public class Password implements Serializable {
     @Column( name = "username", length = 128, nullable = false )
     private String username;
 	
-	@Column( name = "password", length = 32, nullable = false )
+	@Column( name = "password", length = 512, nullable = false )
 	private String password;
 	
 	@ManyToOne( fetch =  FetchType.EAGER )
