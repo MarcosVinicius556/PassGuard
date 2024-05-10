@@ -10,6 +10,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -56,6 +58,7 @@ public class User implements UserDetails {
 	private LocalDateTime createdAt;
 	
 	@OneToMany( mappedBy = "user", fetch = FetchType.EAGER )
+	@JsonIgnore
     @Getter
 	private List<Password> savedPasswords = new ArrayList<>();
 	

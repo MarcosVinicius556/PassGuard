@@ -31,7 +31,7 @@ public class ResourceExceptionHandler extends RuntimeException {
 
     @ExceptionHandler(DatabaseException.class)
     public ResponseEntity<StandardError> databaseException(DatabaseException exception, HttpServletRequest request) {
-        String error = "Resource not found.";
+        String error = "Bad Request.";
         HttpStatus status = HttpStatus.BAD_REQUEST;
         StandardError responseError = new StandardError.Builder()
                                                        .setTimestamp(Instant.now())

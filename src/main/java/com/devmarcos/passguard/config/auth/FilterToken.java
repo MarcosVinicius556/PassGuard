@@ -37,7 +37,7 @@ public class FilterToken extends OncePerRequestFilter {
 
         if(authString != null) {
 
-            token = authString.replace("Bearer", "");
+            token = authString.replace("Bearer", "").trim();
 
             String username = this.tokenService.getSubject(token);
 
