@@ -96,7 +96,7 @@ public class PasswordResource {
     }
 
     @DeleteMapping("/{id}")
-    @Operation( summary = "Atualiza a senha no banco no banco", method = "DELETE" )
+    @Operation( summary = "Deleta a senha no banco", method = "DELETE" )
     @ApiResponses(value = {
         @ApiResponse(responseCode = "204", description = "Requisição OK! Registro removido", content = @Content( schema = @Schema(implementation = Void.class) ) ),
         @ApiResponse(responseCode = "403", description = "Acesso negado!", content = @Content( schema = @Schema(implementation = Void.class) ) ),
