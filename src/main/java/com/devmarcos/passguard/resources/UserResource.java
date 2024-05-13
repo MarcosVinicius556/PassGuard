@@ -64,6 +64,19 @@ public class UserResource {
         return ResponseEntity.ok().body(user);
     }
 
+    @GetMapping("/username/{username}")
+    @Operation( summary = "Busca um usuário com o nome de usuário fornecido", method = "GET" )
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "204", description = "Requisição OK! Registro encontrado", content = @Content( schema = @Schema(implementation = User.class) ) ),
+        @ApiResponse(responseCode = "403", description = "Acesso negado!", content = @Content( schema = @Schema(implementation = Void.class) ) ),
+        @ApiResponse(responseCode = "404", description = "Nenhum Registro encontrado!", content = @Content( schema = @Schema(implementation = StandardError.class) ) ),
+        @ApiResponse(responseCode = "500", description = "Falha interna do servidor!", content = @Content( schema = @Schema(implementation = StandardError.class) ) )
+    })
+    public ResponseEntity<User> findByUsername(@PathVariable String username) {
+        User user = service.findByUsername(username);
+        return ResponseEntity.ok().body(user);
+    }
+
     @GetMapping
     @Operation( summary = "Busca todos os usuário inseridos no banco", method = "GET" )
     @ApiResponses(value = {

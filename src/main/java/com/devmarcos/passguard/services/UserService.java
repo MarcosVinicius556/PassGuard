@@ -38,6 +38,10 @@ public class UserService {
         return opUser.orElseThrow(() -> new ResourceNotFoundException(id));
     }
 
+    public User findByUsername(String username) {
+        return repository.findByUsername(username);
+    }
+
     public List<User> findAll() {
         List<User> users = repository.findAll();
         if(users == null || users.isEmpty())
