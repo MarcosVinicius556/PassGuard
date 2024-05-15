@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
 import com.devmarcos.passguard.dtos.UserCreateDTO;
@@ -11,6 +12,7 @@ import com.devmarcos.passguard.entities.User;
 import com.devmarcos.passguard.repositories.UserRepository;
 import com.devmarcos.passguard.services.exceptions.DatabaseException;
 import com.devmarcos.passguard.services.exceptions.ResourceNotFoundException;
+import com.devmarcos.passguard.services.exceptions.UserAlreadySavedException;
 
 @Service
 public class UserService {
@@ -19,19 +21,22 @@ public class UserService {
     private UserRepository repository;
 
     public void create(UserCreateDTO newUser) {
-        try {
-
-            User user = new User.Builder()
-                                .setNickName(newUser.nickname())
-                                .setUsername(newUser.username())
-                                .setPassword(newUser.password())
-                                .build();
-
-            repository.save(user);
-        } catch (Exception e) {
-            throw new DatabaseException("Oops, ocorreu um erro ao inserir o registro. Detalhes: " + e.getMessage());
+        if(repository.findByUsername(newUser.username()) != null){
+            throw new UserAlreadySavedException(newUser.username());
         }
+
+        User user = new User.Builder()
+                            .setNickName(newUser.nickname())
+                            .setUsername(newUser.username())
+                            .setPassword(hashPassword(newUser.password()))
+                            .build();
+
+        repository.save(user);
     }
+
+    private String hashPassword(String password) {
+    return BCrypt.hashpw(password, BCrypt.gensalt());
+}
 
     public User findById(Long id) {
         Optional<User> opUser = repository.findById(id);
