@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.devmarcos.passguard.dtos.UserCreateDTO;
+import com.devmarcos.passguard.dtos.UserUpdateDTO;
 import com.devmarcos.passguard.entities.User;
 import com.devmarcos.passguard.resources.exceptions.StandardError;
 import com.devmarcos.passguard.services.UserService;
@@ -46,9 +47,9 @@ public class UserResource {
             @ApiResponse(responseCode = "403", description = "Acesso negado!", content = @Content( schema = @Schema(implementation = Void.class) ) ),
             @ApiResponse(responseCode = "500", description = "Falha interna do servidor!", content = @Content( schema = @Schema(implementation = StandardError.class) ))
         })
-    public ResponseEntity<Void> create(@RequestBody UserCreateDTO newUser) {
+    public ResponseEntity<UserCreateDTO> create(@RequestBody UserCreateDTO newUser) {
         service.create(newUser);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().body(newUser);
     }
 
     @GetMapping("/{id}")
@@ -103,7 +104,7 @@ public class UserResource {
         @ApiResponse(responseCode = "404", description = "Nenhum Registro encontrado!", content = @Content( schema = @Schema(implementation = StandardError.class) ) ),
         @ApiResponse(responseCode = "500", description = "Falha interna do servidor!", content = @Content( schema = @Schema(implementation = StandardError.class) ) )
     })
-    public ResponseEntity<Void> update(@PathVariable Long id, @RequestBody User user) {
+    public ResponseEntity<Void> update(@PathVariable Long id, @RequestBody UserUpdateDTO user) {
         service.update(id, user);
         return ResponseEntity.noContent().build();
     }

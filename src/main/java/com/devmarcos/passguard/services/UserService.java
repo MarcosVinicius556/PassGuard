@@ -8,6 +8,7 @@ import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
 import com.devmarcos.passguard.dtos.UserCreateDTO;
+import com.devmarcos.passguard.dtos.UserUpdateDTO;
 import com.devmarcos.passguard.entities.User;
 import com.devmarcos.passguard.repositories.UserRepository;
 import com.devmarcos.passguard.services.exceptions.DatabaseException;
@@ -28,7 +29,7 @@ public class UserService {
         User user = new User.Builder()
                             .setNickName(newUser.nickname())
                             .setUsername(newUser.username())
-                            .setPassword(hashPassword(newUser.password()))
+                            .setPassword(hashPassword(newUser.pass()))
                             .build();
 
         repository.save(user);
@@ -54,7 +55,7 @@ public class UserService {
         return users;
     }
 
-    public User update(Long oldUserId, User newUser) {
+    public User update(Long oldUserId, UserUpdateDTO newUser) {
         try {
             
             User oldUser = repository.getReferenceById(oldUserId);
@@ -67,10 +68,11 @@ public class UserService {
         }
     }
 
-    public void updateData(User oldUser, User newUser) {
-        oldUser.setUsername(newUser.getUsername()); 
-        oldUser.setPassword(newUser.getPassword());
-        oldUser.setNickName(newUser.getNickName());
+    public void updateData(User oldUser, UserUpdateDTO newUser) {
+        oldUser.setUsername(newUser.username());
+        oldUser.setNickName(newUser.nickname());
+        if(newUser.alterarSenha())
+            oldUser.setPassword(newUser.password());
     }
 
     public void delete(Long id) {        
