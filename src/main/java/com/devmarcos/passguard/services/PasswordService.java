@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.devmarcos.passguard.dtos.PasswordCreateDTO;
@@ -82,6 +84,10 @@ public class PasswordService {
         } catch (Exception e) {
             throw new DatabaseException("Oops, ocorreu um erro ao remover o registro. Detalhes: " + e.getMessage());
         }
+    }
+
+    public Page<Password> findByUserId(Long userId, Pageable pageable) {
+        return repository.findByUserId(userId, pageable);
     }
 
 }

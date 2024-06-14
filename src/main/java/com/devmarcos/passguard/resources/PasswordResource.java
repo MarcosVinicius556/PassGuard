@@ -3,6 +3,8 @@ package com.devmarcos.passguard.resources;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -107,6 +109,19 @@ public class PasswordResource {
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         service.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/byUser/{id}")
+    @Operation( summary = "Busca as senhas salvas no banco com base no ID informado", method = "GET" )
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "204", description = "Requisição OK! Registro removido", content = @Content( schema = @Schema(implementation = Page.class) ) ),
+        @ApiResponse(responseCode = "403", description = "Acesso negado!", content = @Content( schema = @Schema(implementation = Void.class) ) ),
+        @ApiResponse(responseCode = "400", description = "Ocorreu um erro ao efetuar a operação no banco de dados!", content = @Content( schema = @Schema(implementation = StandardError.class) ) ),
+        @ApiResponse(responseCode = "404", description = "Nenhum Registro encontrado!", content = @Content( schema = @Schema(implementation = StandardError.class) ) ),
+        @ApiResponse(responseCode = "500", description = "Falha interna do servidor!", content = @Content( schema = @Schema(implementation = StandardError.class) ) )
+    })
+    public ResponseEntity<Page<Password>> findByUser(@PathVariable Long id, Pageable pageable) {
+        return ResponseEntity.ok().body(service.findByUserId(id, pageable));
     }
 
 }
